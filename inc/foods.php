@@ -90,6 +90,7 @@ function fd_columns_head($defaults)
     
     return $defaults;
 }
+//~ add_filter('manage_fd_food_posts_columns', 'fd_columns_head');
  
 // Show Amount
 function fd_columns_content($column_name, $post_ID) 
@@ -104,9 +105,8 @@ function fd_columns_content($column_name, $post_ID)
 		}
 	}
 }
+//~ add_action('manage_fd_food_posts_custom_column', 'fd_columns_content', 10, 2);
 
-add_filter('manage_fd_food_posts_columns', 'fd_columns_head');
-add_action('manage_fd_food_posts_custom_column', 'fd_columns_content', 10, 2);
 
 /**
  * Register meta box(es).
@@ -115,7 +115,7 @@ function fd_register_meta_boxes()
 {
     add_meta_box( 'fd_payment', __( 'Payment', 'textdomain' ), 'fd_payment_callback', 'fd_food');
 }
-add_action( 'add_meta_boxes', 'fd_register_meta_boxes' );
+//~ add_action( 'add_meta_boxes', 'fd_register_meta_boxes' );
  
 /**
  * Meta box display callback.
