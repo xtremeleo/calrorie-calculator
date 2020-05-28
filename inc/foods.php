@@ -306,4 +306,39 @@ add_filter( 'parse_query', 'fd_food_filtering' );
 	
 //~ }
 //~ add_action( 'save_post', 'my_project_updated_send_email' );
+
+
+
+function fd_foods_menu() 
+{
+	add_submenu_page( 'edit.php?post_type=fd_food', 'Import Foods Data', 'Import', 'manage_options', 'import-foods-data', 'fd_import_foods');
+}
+
+add_action( 'admin_menu', 'fd_foods_menu' );
+
+	
+function fd_import_foods()
+{
+	?>
+	<div class="wrap">
+		<h1>Import Food CSV file</h1>
+		
+		<form action="" method="post">
+			<table class="form-table" role="presentation">
+				<tbody>
+					<tr>
+						<th scope="row"><label for="blogname">CSV File</label></th>
+						<td><input name="fd_foodcsvfile" type="file" class="regular-text"></td>
+					</tr>
+				</tbody>
+			</table>
+			
+			<p class="submit"><input type="submit" name="submit" id="submit" class="button button-primary" value="Import"></p>
+		</form>
+		
+	</div>
+	<?php
+}
+
 ?>
+
