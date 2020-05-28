@@ -3,7 +3,7 @@ function fd_custom_post_type()
 {
 	//food
 	$food_labels = array(
-		'name' => __( 'Food', 'fd' ),
+		'name' => __( 'Foods', 'fd' ),
 		'singular_name' => __( 'Food', 'fd' ),
 		'add_new' => __( 'Add New', 'fd' ),
 		'add_new_item' => __( 'Add New Food', 'fd' ),
@@ -15,14 +15,14 @@ function fd_custom_post_type()
 		'not_found' => __( 'No Food found', 'fd' ),
 		'not_found_in_trash' => __( 'No Food found in the Trash','fd' ),
 		'parent_item_colon' => '',
-		'menu_name' => __( 'Food', 'fd' )
+		'menu_name' => __( 'Foods', 'fd' )
 	);
 
 	$food_args = array(
 	'labels'=> $food_labels,
 	'hierarchical'=> true,
 	'description' => 'food',
-	'supports'=> array('author'),
+	'supports'=> array('title', 'editor', 'thumbnail'),
 	'public'=> false,
 	'show_ui' => true,
 	'show_in_menu' => true,
@@ -36,11 +36,11 @@ function fd_custom_post_type()
 	'rewrite' => array( 'slug' => 'food' ),
 	'capability_type' => array( 'post', 'food','foods'),
 	'capabilities' => array(
-							'create_posts' 		=> 'do_not_allow', // false < WP 4.5, credit @Ewout
+							'create_posts' 		=> 'create_food', // false < WP 4.5, credit @Ewout
 							'edit_post'  		=> 'edit_food',
 							//~ 'read_post'         => 'read_food',
 							'delete_post'       => 'delete_food',
-							//~ 'delete_posts'       => 'delete_foods',
+							'delete_posts'       => 'delete_foods',
 							'edit_others_posts' => 'edit_others_foods',
 						  ),
 	'menu_icon'   => 'dashicons-portfolio'
@@ -54,6 +54,7 @@ function fd_add_new_admin_caps()
 {
 	//Add New Admin Capabilites
 	$admin_role = get_role( 'administrator' );
+	$admin_role->add_cap( 'create_food');
 	$admin_role->add_cap( 'read_food');
 	$admin_role->add_cap( 'edit_food');
 	$admin_role->add_cap( 'read_others_food');
@@ -76,36 +77,54 @@ add_action( 'admin_init', 'fd_add_new_admin_caps');
 // ADD NEW COLUMN
 function fd_columns_head($defaults) 
 {
-    $defaults['interest'] = 'Interest';
-    $defaults['loan_amount'] = 'Loan Amount';
-    $defaults['total_food_value'] = 'Expected Total Food Value';
-    $defaults['weekly_monthly_food_value'] = 'Weekly/Monthly Food Value';
-    $defaults['previous_amount_paid'] = 'Previous Amount Paid';
-    $defaults['amount_paid'] = 'Amount Paid';
-    $defaults['payment_date'] = 'Payment Date';
-    $defaults['default_charges'] = 'Default Charges';
-    //~ $defaults['w_m_balance'] = 'Weekly / Monthly Balance';
-	$defaults['balance'] = 'Balance'; 
-	$defaults['payment_status'] = 'Payment Status';
+	$fields = array(
+					array('name'=>'Calories','value' => 'calories'),
+					array('name'=>'Ingredients','value' => 'ingredients'),
+					array('name'=>'Prep Time','value' => 'prep'),
+					array('name'=>'CARBS','value' => 'carbs'),
+					array('name'=>'Fat','value' => 'fats'),
+					array('name'=>'Protein','value' => 'protein'),
+					array('name'=>'Glycemic','value' => 'glycemic'),
+					array('name'=>'Score','value' => 'score'),
+					array('name'=>'Serving','value' => 'serving'),
+					array('name'=>'Slot Time','value' => 'slot'),
+				);
+	
+	foreach($fields as $field )
+	{
+		$defaults[$field['value']] = $field['name'];
+	}
     
     return $defaults;
 }
-//~ add_filter('manage_fd_food_posts_columns', 'fd_columns_head');
+add_filter('manage_fd_food_posts_columns', 'fd_columns_head');
  
-// Show Amount
+
 function fd_columns_content($column_name, $post_ID) 
 {
-	$fields = array('interest','loan_amount','total_food_value','weekly_monthly_food_value','amount_paid', 'previous_amount_paid','payment_date','default_charges','w_m_balance','balance', 'payment_status');
+	
+	$fields = array(
+					array('name'=>'Calories','value' => 'calories'),
+					array('name'=>'Ingredients','value' => 'ingredients'),
+					array('name'=>'Prep Time','value' => 'prep'),
+					array('name'=>'CARBS','value' => 'carbs'),
+					array('name'=>'Fat','value' => 'fats'),
+					array('name'=>'Protein','value' => 'protein'),
+					array('name'=>'Glycemic','value' => 'glycemic'),
+					array('name'=>'Score','value' => 'score'),
+					array('name'=>'Serving','value' => 'serving'),
+					array('name'=>'Slot Time (Breakfast 1, Breakfast 2, Lunch 1, Lunch 2, Dinner)','value' => 'slot'),
+				);
 	
 	foreach($fields as $field)
 	{
-		if ($column_name == $field) 
+		if ($column_name == $field['value']) 
 		{
-			echo get_post_meta( $post_ID, $field, true);
+			echo get_post_meta( $post_ID, $field['value'], true);
 		}
 	}
 }
-//~ add_action('manage_fd_food_posts_custom_column', 'fd_columns_content', 10, 2);
+add_action('manage_fd_food_posts_custom_column', 'fd_columns_content', 10, 2);
 
 
 /**
@@ -113,86 +132,39 @@ function fd_columns_content($column_name, $post_ID)
  */
 function fd_register_meta_boxes() 
 {
-    add_meta_box( 'fd_payment', __( 'Payment', 'textdomain' ), 'fd_payment_callback', 'fd_food');
+	$fields = array(
+					array('name'=>'Calories','value' => 'calories'),
+					array('name'=>'Ingredients','value' => 'ingredients'),
+					array('name'=>'Prep Time','value' => 'prep'),
+					array('name'=>'CARBS','value' => 'carbs'),
+					array('name'=>'Fat','value' => 'fats'),
+					array('name'=>'Protein','value' => 'protein'),
+					array('name'=>'Glycemic','value' => 'glycemic'),
+					array('name'=>'Score','value' => 'score'),
+					array('name'=>'Serving','value' => 'serving'),
+					array('name'=>'Slot Time (Breakfast 1, Breakfast 2, Lunch 1, Lunch 2, Dinner)','value' => 'slot'),
+				);
+	
+	foreach($fields as $field )
+	{
+		add_meta_box( 'fb_'.$field['value'], $field['name'], 'fd_callback', 'fd_food','advanced','default', $field['value']);
+	}
+    
 }
-//~ add_action( 'add_meta_boxes', 'fd_register_meta_boxes' );
+add_action( 'add_meta_boxes', 'fd_register_meta_boxes' );
  
 /**
  * Meta box display callback.
  *
  * @param WP_Post $post Current post object.
  */
-function fd_payment_callback( $post ) 
+function fd_callback( $post, $metabox ) 
 {
 	//global $post;
     // Display code/markup goes here. Don't forget to include nonces!
    // Add a nonce field so we can check for it later.
-    wp_nonce_field( 'fd_payment_nonce' , 'fd_payment_nonce' );
-    echo "<style>
-			.fd_review_table {width: 100%;}
-			.fd_review_table tr {width: 100%;}
-			.fd_review_table tr th {width: 40%; padding: 10px; color: #ffffff; background-color: #1E90FF;}
-		</style>";
-		
-		$fields = array(
-					//~ array("display_name" => "Previous Amount Paid", "type" => "text", "name" => "previous_amount_paid" ),
-					array("display_name" => "Amount Paid", "type" => "text", "name" => "amount_paid" ),
-					array("display_name" => "Payment Date DD/MM/YYYY", "type" => "text", "name" => "payment_date" ),
-					array("display_name" => "Default Charges", "type" => "text", "name" => "default_charges" ),
-					//~ array("display_name" => "Weekly / Monthly Balance", "type" => "text", "name" => "w_m_balance" ),
-					array("display_name" => "Balance", "type" => "text", "name" => "balance" ),
-					array("display_name" => "Payment Status", "type" => "datalist", "name" => "payment_status", "datalist" => "Pending,Approved" ),
-				);
-	echo "<table class='fd_review_table'>
-			<input type='hidden' id='loan_amount' value='".esc_attr( get_post_meta( $post->ID, "loan_amount", true ) )."' required />
-			<input type='hidden' id='weekly_monthly_food_value' value='".esc_attr( get_post_meta( $post->ID, "weekly_monthly_food_value", true ) )."' required />";
-	
-	foreach($fields as $field)
-	{
-		if ($field['type'] == "text")
-		{
-			$required = ( $field['name'] == "default_charges" ? "" : "required");
-			echo "<tr>
-					<th style='text-align: left;' >".$field['display_name']."</th>
-					<td><input type='text' id='".$field['name']."' name='".$field['name']."' value='".esc_attr( get_post_meta( $post->ID, $field['name'], true ) )."' style='width:100%;' ".$required." /></td>
-				</tr>";
-		}
-		else
-		{
-			$datalist = explode(",", $field['datalist']);
-			$options = "<option value='".esc_attr( get_post_meta( $post->ID, $field['name'], true ) )."'>".esc_attr( get_post_meta( $post->ID, $field['name'], true ) )."</option>";
-			foreach($datalist as $data)
-			{
-				$options .= "<option value='".$data."'>".$data."</option>";
-			}
-			
-			echo "<tr>
-					<th style='text-align: left;' >".$field['display_name']."</th>
-					<td>
-						<select id='".$field['name']."' name='".$field['name']."' style='width:100%' required>
-							".$options."
-						</select>
-					</td>
-				</tr>";
-		}
-		
-		
-	}
-	
-	echo "
-		<script>
-			
-				(function () {
-				  var ap = document.getElementById('amount_paid').onchange = function(){
-								var la = document.getElementById('loan_amount').value;
-								var wmrv = document.getElementById('weekly_monthly_food_value').value;
-								var pap = document.getElementById('previous_amount_paid').value;
-								document.getElementById('w_m_balance').setAttribute('value', parseInt(wmrv) - (parseInt(pap) + parseInt(this.value)) );
-								document.getElementById('balance').setAttribute('value', parseInt(la) - (parseInt(pap) + parseInt(this.value)) );
-							}
-				})();
-		</script>
-		</table>";
+    //wp_nonce_field( 'fd_payment_nonce' , 'fd_payment_nonce' );
+    echo "<input type='text' id='".$metabox['args']."' name='".$metabox['args']."' value='".esc_attr( get_post_meta( $post->ID, $metabox['args'], true ) )."' style='width: 100%;padding: 4px;' />";
 
 }
 
@@ -206,9 +178,9 @@ function fd_save_meta_box( $post_id )
     //~ }
 
     // Verify that the nonce is valid.
-    if ( ! wp_verify_nonce( $_POST['fd_payment_nonce'], 'fd_payment_nonce' ) ) {
-        return;
-    }
+    //~ if ( ! wp_verify_nonce( $_POST['fd_nonce'], 'fd_nonce' ) ) {
+        //~ return;
+    //~ }
 
     // If this is an autosave, our form has not been submitted, so we don't want to do anything.
     if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) 
@@ -242,14 +214,18 @@ function fd_save_meta_box( $post_id )
 
     
     $fields = array(
-					//~ array("display_name" => "Previous Amount Paid", "type" => "text", "name" => "previous_amount_paid" ),
-					array("display_name" => "Amount Paid", "type" => "text", "name" => "amount_paid" ),
-					array("display_name" => "Payment Date", "type" => "text", "name" => "payment_date" ),
-					array("display_name" => "Default Charges", "type" => "text", "name" => "default_charges" ),
-					//~ array("display_name" => "Weekly / Monthly Balance", "type" => "text", "name" => "w_m_balance" ),
-					array("display_name" => "Balance", "type" => "text", "name" => "balance" ),
-					array("display_name" => "Payment Status", "type" => "text", "name" => "payment_status" ),
+					array('name'=>'Calories','value' => 'calories'),
+					array('name'=>'Ingredients','value' => 'ingredients'),
+					array('name'=>'Prep Time','value' => 'prep'),
+					array('name'=>'CARBS','value' => 'carbs'),
+					array('name'=>'Fat','value' => 'fats'),
+					array('name'=>'Protein','value' => 'protein'),
+					array('name'=>'Glycemic','value' => 'glycemic'),
+					array('name'=>'Score','value' => 'score'),
+					array('name'=>'Serving','value' => 'serving'),
+					array('name'=>'Slot Time (Breakfast 1, Breakfast 2, Lunch 1, Lunch 2, Dinner)','value' => 'slot'),
 				);
+				
 	foreach($fields as $field)
 	{	
 		// Make sure that it is set.
@@ -260,10 +236,10 @@ function fd_save_meta_box( $post_id )
 		//~ else
 		//~ {
 			// Sanitize user input.
-			$my_data = sanitize_text_field( $_POST[$field['name']] );
+			$my_data = sanitize_text_field( $_POST[$field['value']] );
 			
 			// Update the meta field in the database.
-			update_post_meta( $post_id, $field['name'], $my_data );
+			update_post_meta( $post_id, $field['value'], $my_data );
 		//~ }
 		
 		

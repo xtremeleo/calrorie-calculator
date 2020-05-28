@@ -33,7 +33,7 @@ define( 'CACA__PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
 
 require_once( CACA__PLUGIN_DIR . 'inc/foods.php' );
 
-function etm_scripts() {
+function caca_scripts() {
 	$ver = '1.1';
 	wp_enqueue_style( 'style', "https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css", null, $ver );
 	wp_enqueue_style( 'style', plugin_dir_url( __FILE__ )."assets/css/main.css", null, $ver );
@@ -45,9 +45,9 @@ function etm_scripts() {
 	
 	//wp_enqueue_script( 'scripts', get_template_directory_uri() . '/assets/js/script.js', array('jqueryfull', 'TweenMax', 'ScrollToPlugin', 'barbaUmd', 'polyfill', 'urlsearchparam'), $ver, true );
 }
-add_action( 'wp_enqueue_scripts', 'etm_scripts' );
+add_action( 'wp_enqueue_scripts', 'caca_scripts' );
 
-function etm_front_form()
+function caca_front_form()
 {
 	?>
 	<div style="width: 100%;">
@@ -211,4 +211,4 @@ function etm_front_form()
 		</div>
 	<?php
 }
-add_shortcode( 'etm_main_form', 'etm_front_form');
+add_shortcode( 'caca_main_form', 'caca_front_form');
