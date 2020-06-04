@@ -84,8 +84,7 @@ function fd_columns_head($defaults)
 					array('name'=>'CARBS','value' => 'carbs'),
 					array('name'=>'Fat','value' => 'fats'),
 					array('name'=>'Protein','value' => 'protein'),
-					array('name'=>'Glycemic','value' => 'glycemic'),
-					array('name'=>'Score','value' => 'score'),
+					array('name'=>'Glycemic Score','value' => 'glycemic'),
 					array('name'=>'Serving','value' => 'serving'),
 					array('name'=>'Slot Time','value' => 'slot'),
 				);
@@ -110,8 +109,7 @@ function fd_columns_content($column_name, $post_ID)
 					array('name'=>'CARBS','value' => 'carbs'),
 					array('name'=>'Fat','value' => 'fats'),
 					array('name'=>'Protein','value' => 'protein'),
-					array('name'=>'Glycemic','value' => 'glycemic'),
-					array('name'=>'Score','value' => 'score'),
+					array('name'=>'Glycemic Score','value' => 'glycemic'),
 					array('name'=>'Serving','value' => 'serving'),
 					array('name'=>'Slot Time (Breakfast 1, Breakfast 2, Lunch 1, Lunch 2, Dinner)','value' => 'slot'),
 				);
@@ -139,8 +137,7 @@ function fd_register_meta_boxes()
 					array('name'=>'CARBS','value' => 'carbs'),
 					array('name'=>'Fat','value' => 'fats'),
 					array('name'=>'Protein','value' => 'protein'),
-					array('name'=>'Glycemic','value' => 'glycemic'),
-					array('name'=>'Score','value' => 'score'),
+					array('name'=>'Glycemic Score','value' => 'glycemic'),
 					array('name'=>'Serving','value' => 'serving'),
 					array('name'=>'Slot Time (Breakfast 1, Breakfast 2, Lunch 1, Lunch 2, Dinner)','value' => 'slot'),
 				);
@@ -220,8 +217,7 @@ function fd_save_meta_box( $post_id )
 					array('name'=>'CARBS','value' => 'carbs'),
 					array('name'=>'Fat','value' => 'fats'),
 					array('name'=>'Protein','value' => 'protein'),
-					array('name'=>'Glycemic','value' => 'glycemic'),
-					array('name'=>'Score','value' => 'score'),
+					array('name'=>'Glycemic Score','value' => 'glycemic'),
 					array('name'=>'Serving','value' => 'serving'),
 					array('name'=>'Slot Time (Breakfast 1, Breakfast 2, Lunch 1, Lunch 2, Dinner)','value' => 'slot'),
 				);
@@ -281,7 +277,7 @@ function fd_food_table_filtering()
       </select>
   <?php }
 }
-add_action( 'restrict_manage_posts', 'fd_food_table_filtering' );
+//~ add_action( 'restrict_manage_posts', 'fd_food_table_filtering' );
 
 function fd_food_filtering( $query ) 
 {
@@ -298,7 +294,7 @@ function fd_food_filtering( $query )
 		
 	}
 }
-add_filter( 'parse_query', 'fd_food_filtering' );
+//~ add_filter( 'parse_query', 'fd_food_filtering' );
 
 //~ update_user_meta( int $user_id, string $meta_key, mixed $meta_value, mixed $prev_value = '' )
 //~ function fd_log_staff()
@@ -306,7 +302,6 @@ add_filter( 'parse_query', 'fd_food_filtering' );
 	
 //~ }
 //~ add_action( 'save_post', 'my_project_updated_send_email' );
-
 
 
 function fd_foods_menu() 
@@ -323,17 +318,21 @@ function fd_import_foods()
 	<div class="wrap">
 		<h1>Import Food CSV file</h1>
 		
-		<form action="" method="post">
+		<form action="" method="post" enctype="multipart/form-data">
 			<table class="form-table" role="presentation">
 				<tbody>
 					<tr>
-						<th scope="row"><label for="blogname">CSV File</label></th>
-						<td><input name="fd_foodcsvfile" type="file" class="regular-text"></td>
+						<th scope="row">
+							<label for="blogname">CSV File</label>
+							<br>
+							<small>sample format for the <a href="<?php echo esc_url( plugins_url( '../assets/files/sample.csv', __FILE__ ) );?>" download>CSV file</a>.</small>
+						</th>
+						<td><input name="fd_foodcsvfile" type="file" accept="text/csv" class="regular-text"></td>
 					</tr>
 				</tbody>
 			</table>
 			
-			<p class="submit"><input type="submit" name="submit" id="submit" class="button button-primary" value="Import"></p>
+			<p class="submit"><button type="submit" name="action" id="submit" class="butesc_url( plugins_url( 'images/wordpress.png', __FILE__ ) ) ton button-primary" value="fd_import">Import</button></p>
 		</form>
 		
 	</div>

@@ -32,6 +32,8 @@ forty eight (48) hours.
 define( 'CACA__PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
 
 require_once( CACA__PLUGIN_DIR . 'inc/foods.php' );
+require_once( CACA__PLUGIN_DIR . 'inc/actions.php' );
+require_once( CACA__PLUGIN_DIR . 'inc/api.php' );
 
 function caca_scripts() {
 	$ver = '1.1';
@@ -71,10 +73,12 @@ function caca_front_form()
 					<form class="form">
 						<div style="padding: 10px;">
 							<p> 
-								I want to eat <input type="number" name="calories" style="width: 200px; padding: 5px; border: 1px solid grey;" placeholder="#####" /> Calories  
+								I want to eat <input type="number" id="calories" name="calories" style="width: 200px; padding: 5px; border: 1px solid grey;" placeholder="#####" /> Calories  
+<!--
 								| <a href="#"  data-toggle="modal" data-target="#exampleModal" >not sure, use <img src="<?php echo plugin_dir_url( __FILE__ );?>assets/img/calculator.png" width="30px" /></a>
+-->
 							</p>
-							<p> in  <select style="width: 200px; padding: 5px; border: 1px solid grey;" >
+							<p> in  <select id="meal" name="meal" style="width: 200px; padding: 5px; border: 1px solid grey;" >
 										<option value="1">1 meal</option>
 										<option value="2">2 meals</option>
 										<option value="3">3 meals</option>
@@ -186,16 +190,31 @@ function caca_front_form()
 							event.preventDefault();
 							//~ document.getElementById("transform").style.display = "none";
 							document.getElementById("showLoader").style.display = "block";
+							showPage();
 							
-							var myVar = setTimeout(showPage, 4000);
+							//~ var myVar = setTimeout(showPage, 4000);
 							
 						}
 						
-						function showPage() {
-						  document.getElementById("showLoader").style.display = "none";
-						  document.getElementById("message").style.display = "block";
-						  
-						  var myVar2 = setTimeout(transformsubmit, 2000);
+						function showPage() 
+						{
+							var calories = document.getElementById("calories").value;
+							var meal = document.getElementById("meal").value;
+							var xhttp = new XMLHttpRequest();
+								xhttp.onreadystatechange = function() 
+								{
+									if (this.readyState == 4 && this.status == 200) 
+									{
+										document.getElementById("message").innerHTML = JSON.parse(this.responseText);
+										document.getElementById("showLoader").style.display = "none";
+										document.getElementById("message").style.display = "block";
+									}
+								};
+								
+								xhttp.open("GET", "<?php echo site_url("wp-json/food/check/".date("dmYydmd"));?>/calories/" + calories + "/meal/" + meal, true);
+								xhttp.send();
+  
+						  //~ var myVar2 = setTimeout(transformsubmit, 2000);
 						  
 						}
 						
@@ -203,6 +222,7 @@ function caca_front_form()
 						  document.getElementById("transform").submit();
 						  
 						}
+						
 						
 						
 					</script>
