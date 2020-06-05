@@ -17,19 +17,25 @@ function qb_api_get_foods( $data )
 		$target_calories = $data['calories'];
 		
 		//divide calories into slot
-		$slot = $target_calories / 5;
+		$slot = $target_calories / $data['meal'];
 		
 		//slot ratio 2:1:2
-		$breakfast_slots = $slot*2;
-		$lunch_slots = $slot*1;
-		$dinner_slots = $slot*2;
+		//~ $breakfast_slots = $slot*2;
+		//~ $lunch_slots = $slot*1;
+		//~ $dinner_slots = $slot*2;
 		
 		$foods = array(
-						array("name"=>"Breakfast", "code" => "BK1", "slot" => $breakfast_slots / 2 ),
-						array("name"=>"Breakfast 2", "code" => "BK2", "slot" => $breakfast_slots / 2 ),
-						array("name"=>"Lunch", "code" => "LU1", "slot" => $lunch_slots ),
-						array("name"=>"Dinner", "code" => "DN", "slot" => $dinner_slots ),
+						array("name"=>"Breakfast", "code" => array('BK1', 'BK2')),
+						array("name"=>"Lunch", "code" => "LU1"),
+						array("name"=>"Dinner", "code" => "DN"),
+						array("name"=>"Snack", "code" => "SN"),
+						array("name"=>"Snack", "code" => "SN"),
+						array("name"=>"Snack", "code" => "SN"),
+						array("name"=>"Snack", "code" => "SN"),
+						array("name"=>"Snack", "code" => "SN"),
+						array("name"=>"Snack", "code" => "SN"),
 				);
+		$foods_calories = array();
 		//~ foreach($foods as $food)
 		for ($i = 0; $i < $data['meal']; $i++)
 		{
@@ -37,7 +43,7 @@ function qb_api_get_foods( $data )
 		
 			$bkfood_mod .="<div> <h5 style='border-bottom: 1px solid #FFA500;'>".$food['name']."</h5>";
 			
-			$fd_args = array('numberposts' => 2, 
+			$fd_args = array('numberposts' => 1, 
 							'post_type' => 'fd_food', 
 							'orderby' => 'rand',
 							'order'   => 'DESC',
@@ -49,7 +55,7 @@ function qb_api_get_foods( $data )
 													),
 													array(
 														'key'     => 'calories',
-														'value'   => $food['slot'],
+														'value'   => $slot,
 														'compare' => '<',
 													),
 												),
@@ -61,9 +67,10 @@ function qb_api_get_foods( $data )
 			{
 				
 				$bkfood_mod .= "<div class=''>
-								<div style='width: 100px; height: 100px; float: left; background-repeat: no-repeat; background-size: 100%; background-image: url(".get_the_post_thumbnail_url($bkfood->ID, '200' ).");'></div>
+								<div style='width: 100px; height: 100px; float: left; margin-right: 10px; background-color: #BFBFBF; background-repeat: no-repeat; background-size: 130%; background-image: url(".get_the_post_thumbnail_url($bkfood->ID, '200' ).");'></div>
 								<h5>".$bkfood->post_title."
-									<br/><small>".get_post_meta($bkfood->ID,'calories', true )."</small>
+									<br/><small>".get_post_meta($bkfood->ID,'calories', true )." Calories</small>
+									<br/><small>".get_post_meta($bkfood->ID,'serving', true )." Serving</small>
 								</h5>
 								</div>";
 				
@@ -73,6 +80,8 @@ function qb_api_get_foods( $data )
 				//~ {
 					//~ $bkfood_mod[$bkfood->ID][$field['name']] = ;
 				//~ }
+				
+				$foods_calories[] = get_post_meta($bkfood->ID,'calories', true );
 			}
 		
 			$bkfood_mod .="</div>";
@@ -98,7 +107,7 @@ function qb_api_get_foods( $data )
 		//$answers = get_post_meta( , 'qb_answers', true );
 		
 		//~ $mealplan = "<h3>Today&apos;Meal Plan</h3><h5>".$target_calories." Calories </h5><h4>".$data['meal']."</h4>".$bkfood_mod;
-		$mealplan = "<h3>Today&apos;Meal Plan</h3><h5>".$target_calories." Calories </h5>".$bkfood_mod;
+		$mealplan = "<h3>Today&apos;s Meal Plan</h3><h5>".$target_calories." Target Calories | ".array_sum($foods_calories)." Calories </h5>".$bkfood_mod;
 		
 		return $mealplan;
 		

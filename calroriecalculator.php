@@ -82,7 +82,7 @@ function caca_front_form()
 										<option value="1">1 meal</option>
 										<option value="2">2 meals</option>
 										<option value="3">3 meals</option>
-										<option value="4" selected="">4 meals</option>
+										<option value="4" selected >4 meals</option>
 										<option value="5">5 meals</option>
 										<option value="6">6 meals</option>
 										<option value="7">7 meals</option>
