@@ -42,6 +42,7 @@ function caca_scripts() {
 	wp_enqueue_script( 'jqueryfull', 'https://code.jquery.com/jquery-3.5.1.slim.min.js', array(), false );
 	wp_enqueue_script( 'popper', 'https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js', array(), false );
 	wp_enqueue_script( 'bootstrap', 'https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js', array(), false );
+	wp_enqueue_script( 'fontawesome', 'https://kit.fontawesome.com/2b817816c7.js', array(), false );
 
 	//wp_enqueue_script( 'polyfill', 'https://polyfill.io/v3/polyfill.min.js?features=Promise%2CArray.prototype.filter%2CMap%2CArray.prototype.find%2Cdocument.querySelector%2CArray.prototype.forEach%2CArray.prototype.includes', array(), true );
 	
@@ -188,9 +189,16 @@ function caca_front_form()
 						
 						.meal-card:hover { box-shadow: 0 6px 14px 0 rgba(0, 0, 0, 0.22); z-index: 10;}
 						
-						.meal-card .title{ color: #4D4D4D; font-size: 20px;font-weight: 200; display: inline-block; margin: 0px!important;}
+						.meal-card .title{ color: #4D4D4D; font-size: 20px;font-weight: 200; display: block; margin: 0px!important;}
 						
-						.meal-card .sub-title{ color: #4D4D4D; font-size: 14px;font-weight: bold; display: block; margin: 0px!important;}
+						.meal-card .sub-title{ width: 90%; color: #4D4D4D; font-size: 14px;font-weight: bold; display: block; margin: 0px!important;}
+						
+						.food-tip {}
+						
+						.food-tip .float { background-color: #1E1717;} 
+						
+						.food-tip .float h5 { margin: 0px; color: #FFA500;} 
+						.food-tip .float p { margin: 0px; color: #FFA500;} 
 						
 					</style>
 					
@@ -251,6 +259,29 @@ function caca_front_form()
 							
 							
   
+						  //~ var myVar2 = setTimeout(transformsubmit, 2000);
+						  
+						}
+						
+						function individual_refresh(id, n) 
+						{
+							
+							var xhttp = new XMLHttpRequest();
+							
+							xhttp.onreadystatechange = function() 
+							{
+								if (this.readyState == 4 && this.status == 200) 
+								{
+
+									document.getElementById("id").innerHTML = JSON.parse(this.responseText);
+									
+								}
+							};
+							
+							xhttp.open("GET", "<?php echo site_url("wp-json/food/check/".date("dmYydmd"));?>/calories/" + calories + "/meal/" + meal, true);
+							xhttp.send();
+							
+							
 						  //~ var myVar2 = setTimeout(transformsubmit, 2000);
 						  
 						}

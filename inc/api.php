@@ -41,7 +41,7 @@ function qb_api_get_foods( $data )
 		{
 			$food = $foods[$i];
 		
-			$bkfood_mod .="<div class='meal-card'> <h5 class='title'>".$food['name']."</h5>";
+			$bkfood_mod .="<div class='meal-card'> <h5 class='title'>".$food['name']." <a onclick=alert(loading'loading') ><i class='float-right fas fa-redo'></i></a> </h5>";
 			
 			$fd_args = array('numberposts' => 1, 
 							'post_type' => 'fd_food', 
@@ -66,43 +66,56 @@ function qb_api_get_foods( $data )
 			foreach($bkfoods as $bkfood)
 			{
 				
-				$bkfood_mod .= "<div class=''>
+				$bkfood_mod .= "<div id='".get_post_meta($bkfood->ID,'slot', true )."-food' class=''>
 								<div style='width: 100px; height: 100px; float: left; margin-right: 10px; background-color: #BFBFBF; background-repeat: no-repeat; background-size: 130%; background-image: url(".get_the_post_thumbnail_url($bkfood->ID, '200' ).");'></div>
 								<a type='button' data-toggle='modal' data-target='#modal-".$bkfood->ID."' >
-									<h5 class='sub-title'>".$bkfood->post_title."
+									<h5 class='sub-title'>".$bkfood->post_title." <a type='button' data-toggle='modal' data-target='#modal-".$bkfood->ID."' ><i class='float-right fa fa-info-circle'></i></a>
 										<br/><small>".get_post_meta($bkfood->ID,'serving', true )." Serving (".get_post_meta($bkfood->ID,'calories', true )." Calories )</small>
 									</h5>
-									<i class='fa fa-info-circle'></i>
 								</a>
+								
+								<div class='collapse' id='food-tip-".$bkfood->ID."'>
+									<div class='food-tip'>
+									  <div class='card card-body float'>
+										<div class='row'>
+											<div class='col-12'>
+												<p style='color: #90EE90;' >Calories: ".get_post_meta($bkfood->ID,'calories', true )."</p>
+												<p style='' >CARBS: ".get_post_meta($bkfood->ID,'carbs', true )."</p>
+												
+												<p style='' >Fats: ".get_post_meta($bkfood->ID,'fats', true )."</p>
+												<p style='' >Protein: ".get_post_meta($bkfood->ID,'protein', true )."</p>
+												
+												<p style='' >Glycemic Score: ".get_post_meta($bkfood->ID,'glycemic', true )."</p>
+												<p style='color: #9D0303;' >Ingredients: ".get_post_meta($bkfood->ID,'ingredients', true )."</p>
+												<p style='color: #52E552;' >Prep Time: ".get_post_meta($bkfood->ID,'prep', true )."</p>
+											</div>
+										</div>
+									  </div>
+								  </div>
+								</div>
 								
 								<!-- Modal -->
 								<div class='modal fade' id='modal-".$bkfood->ID."' tabindex='-1' role='dialog' aria-labelledby='#modal-".$bkfood->ID."Label' aria-hidden='true'>
-									<div class='modal-dialog modal-md'>
-										<div class='modal-content'>
+									<div class='modal-dialog modal-md food-tip'>
+										<div class='modal-content float'>
 											<div class='modal-header'>
 												<h5 class='modal-title' id='modal-".$bkfood->ID."Label'>".$bkfood->post_title."</h5>
-												<button type='button' class='close' data-dismiss='modal' aria-label='Close'>
-													<span aria-hidden='true'>&times;</span>
-												</button>
+												
 											</div>
 											
 											<div class='modal-body'>
 												<div class='row'>
-													<div class='col-6'>
-														<p>Calories: ".get_post_meta($bkfood->ID,'calories', true )."</p>
-														<p>CARBS: ".get_post_meta($bkfood->ID,'carbs', true )."</p>
-													</div>
-													
-													<div class='col-6'>
-														<p>Fats: ".get_post_meta($bkfood->ID,'fats', true )."</p>
-														<p>Protein: ".get_post_meta($bkfood->ID,'protein', true )."</p>
-													</div>
-													
 													<div class='col-12'>
-														<p>Glycemic Score: ".get_post_meta($bkfood->ID,'glycemic', true )."</p>
-														<p>Ingredients: ".get_post_meta($bkfood->ID,'ingredients', true )."</p>
-														<p>Prep Time: ".get_post_meta($bkfood->ID,'prep', true )."</p>
-													</div>
+												<p style='color: #90EE90;' >Calories: ".get_post_meta($bkfood->ID,'calories', true )."</p>
+												<p style='' >CARBS: ".get_post_meta($bkfood->ID,'carbs', true )."</p>
+												
+												<p style='' >Fats: ".get_post_meta($bkfood->ID,'fats', true )."</p>
+												<p style='' >Protein: ".get_post_meta($bkfood->ID,'protein', true )."</p>
+												
+												<p style='' >Glycemic Score: ".get_post_meta($bkfood->ID,'glycemic', true )."</p>
+												<p style='color: #9D0303;' >Ingredients: ".get_post_meta($bkfood->ID,'ingredients', true )."</p>
+												<p style='color: #52E552;' >Prep Time: ".get_post_meta($bkfood->ID,'prep', true )."</p>
+											</div>
 												</div>
 											</div>
 										</div>
