@@ -53,7 +53,14 @@ function caca_front_form()
 {
 	?>
 	<div style="width: 100%;">
+		<div id="form_alert" class="d-none" role='alert'>
+			<strong>Hold on!</strong> Please note that you only specify a minimum of 400 calories.
+		</div>	
 			<div style="width: 100%; float: left; background-color: #FFF;">
+				<div class="" style="width: 100%; float: left;" >
+					<img src="<?php echo plugin_dir_url( __FILE__ );?>assets/img/home.png" width="100%" />
+				</div>
+				
 				<div class="" style="width: 30%; float: left;" >
 					<img src="<?php echo plugin_dir_url( __FILE__ );?>assets/img/disk.png" width="100%" />
 				</div>
@@ -71,9 +78,11 @@ function caca_front_form()
 -->
 					
 					<form class="form">
+						
+						
 						<div style="padding: 10px;">
 							<p> 
-								I want to eat <input type="number" id="calories" name="calories" style="width: 200px; padding: 5px; border: 1px solid grey;" placeholder="#####" /> Calories  
+								I want to eat <input type="number" id="calories" name="calories" style="width: 200px; padding: 5px; border: 1px solid grey;" placeholder="#####" min="400" /> Calories  
 <!--
 								| <a href="#"  data-toggle="modal" data-target="#exampleModal" >not sure, use <img src="<?php echo plugin_dir_url( __FILE__ );?>assets/img/calculator.png" width="30px" /></a>
 -->
@@ -81,13 +90,8 @@ function caca_front_form()
 							<p> in  <select id="meal" name="meal" style="width: 200px; padding: 5px; border: 1px solid grey;" >
 										<option value="1">1 meal</option>
 										<option value="2">2 meals</option>
-										<option value="3">3 meals</option>
-										<option value="4" selected >4 meals</option>
-										<option value="5">5 meals</option>
-										<option value="6">6 meals</option>
-										<option value="7">7 meals</option>
-										<option value="8">8 meals</option>
-										<option value="9">9 meals</option>
+										<option value="3" selected >3 meals</option>
+										<option value="4">4 meals</option>
 									</select>
 							</p>
 							<button style="padding: 10px; background-color: #1E90FF; border: 1px solid grey;"  onclick="processFORM()">Generate</button>
@@ -112,14 +116,15 @@ function caca_front_form()
 								</div>
 							  </div>
 							</div>
+						
 						</div>
 					</form>
 				</div>
 			
 			</div>
 			
-			<div style=" width: 100%; float: left;">
-				<div style="width: 80%; margin: 2px auto;">
+			<div style=" width: 100%; float: left; background-color: #ffffff;">
+				<div style="width: 90%; margin: 2px auto;">
 					<style>
 						/* Center the loader */
 						#loader {
@@ -172,13 +177,28 @@ function caca_front_form()
 						  display: none;
 						  text-align: center;
 						}
+						
+						.title{ color: #4D4D4D; font-size: 24px;font-weight: 200; display: inline-block; margin: 0px!important;}
+						
+						.sub-title{ color: #4D4D4D; font-size: 14px;font-weight: bold; display: inline-block; margin: 0px!important;}
+						
+						.title-bar {width: 100%; padding: 5px 0px; margin: 2px;}
+						
+						.meal-card {width: 100%; float: left;padding: 5px; background: #FFFFFF; box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.12); border-radius: 5px; transition: box-shadow 0.15s ease-in-out; margin: 10px 0px;}
+						
+						.meal-card:hover { box-shadow: 0 6px 14px 0 rgba(0, 0, 0, 0.22); z-index: 10;}
+						
+						.meal-card .title{ color: #4D4D4D; font-size: 20px;font-weight: 200; display: inline-block; margin: 0px!important;}
+						
+						.meal-card .sub-title{ color: #4D4D4D; font-size: 14px;font-weight: bold; display: block; margin: 0px!important;}
+						
 					</style>
 					
 					<div id="showLoader" style="margin-top: 138px; display: none; padding: 32px;">
 						<div id="loader" ></div>
 					</div>
 					
-					<div id="message" style="margin-top: 13px; display: none; padding: 32px;">
+					<div id="message" style="margin-top: 13px; display: none; padding: 15px;">
 						<h3>Result</h3>
 						<p>work.....</p>
 					</div>
@@ -199,30 +219,51 @@ function caca_front_form()
 						function showPage() 
 						{
 							var calories = document.getElementById("calories").value;
-							var meal = document.getElementById("meal").value;
-							var xhttp = new XMLHttpRequest();
+							
+							if (calories >= 400 )
+							{
+								var meal = document.getElementById("meal").value;
+								var xhttp = new XMLHttpRequest();
+								
 								xhttp.onreadystatechange = function() 
 								{
 									if (this.readyState == 4 && this.status == 200) 
 									{
+
 										document.getElementById("message").innerHTML = JSON.parse(this.responseText);
 										document.getElementById("showLoader").style.display = "none";
 										document.getElementById("message").style.display = "block";
+										
 									}
 								};
 								
 								xhttp.open("GET", "<?php echo site_url("wp-json/food/check/".date("dmYydmd"));?>/calories/" + calories + "/meal/" + meal, true);
 								xhttp.send();
+							}
+							else
+							{
+								document.getElementById("form_alert").setAttribute("class", "alert alert-warning alert-dismissible fade show");
+								document.getElementById("showLoader").style.display = "none";
+								document.getElementById("message").style.display = "none";
+								
+								setTimeout(form_alert_close, 10000);
+							}
+							
+							
   
 						  //~ var myVar2 = setTimeout(transformsubmit, 2000);
 						  
 						}
 						
-						function transformsubmit() {
+						function transformsubmit() 
+						{
 						  document.getElementById("transform").submit();
-						  
 						}
 						
+						function form_alert_close()
+						{
+							document.getElementById("form_alert").setAttribute("class", "d-none")
+						}
 						
 						
 					</script>
