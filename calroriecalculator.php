@@ -8,9 +8,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 Plugin Name: Calrorie Calculator
 Plugin URI: 
 Description: 
-Author: Ikechukwu Mbilitem [xtremeleo]
+Author: Hashtag Solutions
 Version: 1.0
-Author URI: www.linkedin.com/in/xtremeleo/
+Author URI: #
 
 instructions 3.3. Order Management:
 
@@ -92,7 +92,6 @@ function caca_front_form()
 										<option value="1">1 meal</option>
 										<option value="2">2 meals</option>
 										<option value="3" selected >3 meals</option>
-										<option value="4">4 meals</option>
 									</select>
 							</p>
 							<button style="padding: 10px; background-color: #1E90FF; border: 1px solid grey;"  onclick="processFORM()">Generate</button>
@@ -191,7 +190,7 @@ function caca_front_form()
 						
 						.meal-card .title{ color: #4D4D4D; font-size: 20px;font-weight: 200; display: block; margin: 0px!important;}
 						
-						.meal-card .sub-title{ width: 90%; color: #4D4D4D; font-size: 14px;font-weight: bold; display: block; margin: 0px!important;}
+						.meal-card .sub-title{ color: #4D4D4D; font-size: 14px;font-weight: bold; display: block; margin: 0px!important;}
 						
 						.food-tip {}
 						
@@ -199,6 +198,8 @@ function caca_front_form()
 						
 						.food-tip .float h5 { margin: 0px; color: #FFA500;} 
 						.food-tip .float p { margin: 0px; color: #FFA500;} 
+						
+						.food-plate {width: 100%; float: left; margin: 12px 0px; }
 						
 					</style>
 					
@@ -263,7 +264,7 @@ function caca_front_form()
 						  
 						}
 						
-						function individual_refresh(id, n) 
+						function individual_refresh(id, n, s) 
 						{
 							
 							var xhttp = new XMLHttpRequest();
@@ -278,7 +279,7 @@ function caca_front_form()
 								}
 							};
 							
-							xhttp.open("GET", "<?php echo site_url("wp-json/food/check/".date("dmYydmd"));?>/calories/" + calories + "/meal/" + meal, true);
+							xhttp.open("GET", "<?php echo site_url("wp-json/food_spec/check/".date("dmYydmd"));?>/n/" + n + "/s/" + s, true);
 							xhttp.send();
 							
 							
