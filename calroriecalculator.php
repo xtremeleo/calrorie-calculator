@@ -43,6 +43,7 @@ function caca_scripts() {
 	wp_enqueue_script( 'popper', 'https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js', array(), false );
 	wp_enqueue_script( 'bootstrap', 'https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js', array(), false );
 	wp_enqueue_script( 'fontawesome', 'https://kit.fontawesome.com/2b817816c7.js', array(), false );
+	wp_enqueue_script( 'custom', plugin_dir_url( __FILE__ )."assets/js/main.js", array(), false );
 
 	//wp_enqueue_script( 'polyfill', 'https://polyfill.io/v3/polyfill.min.js?features=Promise%2CArray.prototype.filter%2CMap%2CArray.prototype.find%2Cdocument.querySelector%2CArray.prototype.forEach%2CArray.prototype.includes', array(), true );
 	
@@ -297,6 +298,9 @@ function caca_front_form()
 							document.getElementById("form_alert").setAttribute("class", "d-none")
 						}
 						
+						$('#modal".$bkfood->ID."btn').hover(function () {
+										$('#modal-".$bkfood->ID."').modal('show')
+									});
 						
 					</script>
 				</div>

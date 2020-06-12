@@ -34,42 +34,47 @@ function qb_api_get_foods( $data )
 		//~ foreach($foods as $food)
 		for ($i = 0; $i < $data['meal']; $i++)
 		{
-			$nos_plate = $slot / 300;
+			//$nos_plate = $slot / 300;
 			$food = $foods[$i];
-			$code = (is_array($food['code']) ? $food['code'][0]: $food['code']);
+			$code = (is_array($food['code']) ? $food['code'][0] : $food['code']);
 			
 			$bkfood_mod .="<div class='meal-card'> <h5 class='title'>".$food['name']." <a onclick=".sprintf("individual_refresh('%s','%u','%s')", $food['name']."-food", $slot, $code )." ><small><i class='float-right fas fa-sync'></i></small> </a> </h5>";
 			
-			$fd_args = array('numberposts' => ceil($nos_plate), 
+			$fd_args = array('numberposts' => -1, 
 							'post_type' => 'fd_food', 
 							'orderby' => 'rand',
 							'order'   => 'DESC',
 							'meta_query' => array(
-													'relation' => 'AND',
 													array(
 														'key'     => 'slot',
 														'value'   => $food['code'],
-													),
-													array(
-														'key'     => 'calories',
-														'value'   => 300,
-														'compare' => '<',
-													),
+													)
 												),
 							);
 			
 			$bkfoods = get_posts( $fd_args );
-			//$bkfood_mod = array();
+			$called_calories = array();
+			
 			foreach($bkfoods as $bkfood)
 			{
+				$called_calories[] = get_post_meta($bkfood->ID,'calories', true );
 				
-				$bkfood_mod .= "<div id='".$food['name']."-food' class='food-plate'>
+				if (array_sum($called_calories) > $slot )
+				{
+					
+				}
+				else
+				{
+					$bkfood_mod .= "<div id='".$food['name']."-food' class='food-plate'>
 								<div style='width: 100px; height: 100px; float: left; border-radius: 20%; margin-right: 10px; background-color: #BFBFBF; background-repeat: no-repeat; background-size: 180%; background-image: url(".get_the_post_thumbnail_url($bkfood->ID, '200' ).");'></div>
-								<a type='button' data-toggle='modal' data-target='#modal-".$bkfood->ID."' >
-									<h5 class='sub-title'> ".$bkfood->post_title." <a type='button' data-toggle='modal' data-target='#modal-".$bkfood->ID."' ><i class='float-right fa fa-info-circle'></i></a>
+								
+									<h5 class='sub-title'> ".$bkfood->post_title." 
+										<a id='modal".$bkfood->ID."btn' onmouseover=$('#modal-".$bkfood->ID."').modal('show') type='button' data-toggle='modal' data-target='#modal-".$bkfood->ID."' >
+											<i class='float-right fa fa-info-circle'></i>
+										</a>
+										
 										<br/><small>".get_post_meta($bkfood->ID,'serving', true )." Serving (".get_post_meta($bkfood->ID,'calories', true )." Calories )</small>
 									</h5>
-								</a>
 								
 								<!-- Modal -->
 								<div class='modal fade' id='modal-".$bkfood->ID."' tabindex='-1' role='dialog' aria-labelledby='#modal-".$bkfood->ID."Label' aria-hidden='true'>
@@ -101,6 +106,12 @@ function qb_api_get_foods( $data )
 						
 								
 								</div>";
+								
+								$foods_calories[] = get_post_meta($bkfood->ID,'calories', true );
+				}
+				
+				
+				
 				
 				//~ [$bkfood->ID]['title'] = ;
 				
@@ -109,7 +120,7 @@ function qb_api_get_foods( $data )
 					//~ $bkfood_mod[$bkfood->ID][$field['name']] = ;
 				//~ }
 				
-				$foods_calories[] = get_post_meta($bkfood->ID,'calories', true );
+				
 			}
 		
 			$bkfood_mod .="</div>";
