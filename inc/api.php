@@ -131,7 +131,7 @@ function qb_api_get_food_spec( $data )
 						array("name"=>"Snack", "code" => "SN"),
 				);
 		
-		$fd_args = array('numberposts' => -1, 
+		$fd_args = array('numberposts' => 3, 
 						'post_type' => 'fd_food', 
 						'orderby' => 'rand',
 						'order'   => 'DESC',
@@ -152,48 +152,10 @@ function qb_api_get_food_spec( $data )
 			
 			if ($slot > array_sum($called_calories) )
 			{
-				$bkfood_mod .= "<div class='food-plate'>
-								<div style='position: relative; width: 100px; height: 100px; float: left; border-radius: 20%; margin-right: 10px; background-color: #BFBFBF; background-repeat: no-repeat; background-size: 180%; background-image: url(".get_the_post_thumbnail_url($bkfood->ID, '200' ).");'></div>
-								
-									<h5 class='sub-title'> ".$bkfood->post_title." 
-										<a id='modal".$bkfood->ID."btn' onmouseover=show_tooltips('modal".$bkfood->ID."') data-toggle='collapse' href='#modal-".$bkfood->ID."' role='button' aria-expanded='false' aria-controls='#modal-".$bkfood->ID."' >
-											<i class='float-right fa fa-info-circle'></i>
-										</a>
-										
-										<br/><small>".get_post_meta($bkfood->ID,'serving', true )*2 ." Serving (".get_post_meta($bkfood->ID,'calories', true )*2 ." Calories ) X2</small>
-									</h5>
-								
-									<div class='collapse food-tip' id='modal".$bkfood->ID."'>
-										<div class='col-12'>
-											<p style='color: #90EE90;' >Calories: ".get_post_meta($bkfood->ID,'calories', true )."</p>
-											<p >CARBS: ".get_post_meta($bkfood->ID,'carbs', true )."</p>
-											
-											<p >Fats: ".get_post_meta($bkfood->ID,'fats', true )."</p>
-											<p >Protein: ".get_post_meta($bkfood->ID,'protein', true )."</p>
-											
-											<p >Glycemic Score: ".get_post_meta($bkfood->ID,'glycemic', true )."</p>
-											<p style='color: #ADD8E6;' >Ingredients: ".get_post_meta($bkfood->ID,'ingredients', true )."</p>
-											<p style='color: #52E552;' >Prep Time: ".get_post_meta($bkfood->ID,'prep', true )."</p>
-										</div>
-									</div>
-									
-								
-								
-						
-								
-								</div>";
-							
-							$foods_calories[] = get_post_meta($bkfood->ID,'calories', true );
+				$bkfood_mod .= cc_food_mod($bkfood);
+				$foods_calories[] = get_post_meta($bkfood->ID,'calories', true );
 			}
 			
-			
-			
-			//~ [$bkfood->ID]['title'] = ;
-			
-			//~ foreach($fields as $field )
-			//~ {
-				//~ $bkfood_mod[$bkfood->ID][$field['name']] = ;
-			//~ }
 			
 		}
 	
@@ -222,10 +184,6 @@ add_action( 'rest_api_init', function () {
     'callback' => 'qb_api_get_food_spec',
   ) );
   
-  //~ register_rest_route( 'question', '/id/(?P<id>\d+)/(?P<check>\d+)', array(
-    //~ 'methods' => 'GET',
-    //~ 'callback' => 'qb_api_get_answers',
-  //~ ) );
   
 } );
 
