@@ -99,27 +99,7 @@ function caca_front_form()
 					
 							<button style="padding: 10px;  margin-top: 2px; background-color: #1E90FF; border: 1px solid grey;"  onclick="processFORM()">Generate</button>
 							
-							<!-- Modal -->
-							<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-							  <div class="modal-dialog modal-xl">
-								<div class="modal-content">
-								  <div class="modal-header">
-									<h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
-									<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-									  <span aria-hidden="true">&times;</span>
-									</button>
-								  </div>
-								  <div class="modal-body">
-									...
-								  </div>
-								  <div class="modal-footer">
-									<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-									<button type="button" class="btn btn-primary">Save changes</button>
-								  </div>
-								</div>
-							  </div>
-							</div>
-						
+							
 						</div>
 					</form>
 				</div>
@@ -199,7 +179,7 @@ function caca_front_form()
 						
 						.food-tip {}
 						
-						.food-tip { position: absolute; width: 210px; margin-left: 14%; margin-top: -1%; letter-spacing: 0.3px; font-size: 1.8rem; background-color: #1E1717; z-index: 1;} 
+						.food-tip { width: 100%; float: left; margin-top: 2%; letter-spacing: 0.3px; font-size: 1.8rem; background-color: #1E1717; z-index: 1;} 
 						
 						.food-tip h5 { margin: 0px; color: #FFA500;} 
 						.food-tip p { margin: 0px; color: #FFA500;} 
