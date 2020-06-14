@@ -87,5 +87,8 @@ function fd_actions()
 
 add_action('init', 'fd_actions');
 	
+	$name = "apple";
+	$bit = file_get_contents($image);
+	$upload = wp_upload_bits( $name, null, $bits, date("Y/m"));
 	
 ?>

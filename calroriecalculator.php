@@ -55,12 +55,14 @@ function caca_front_form()
 {
 	?>
 	<div style="width: 100%;">
-		<div id="form_alert" class="d-none" role='alert'>
-			<strong>Hold on!</strong> Please note that you only specify a minimum of 400 calories.
-		</div>	
+			
 			<div style="width: 100%; float: left; background-color: #FFF;">
 				<div class="" style="width: 100%; float: left;" >
 					<img src="<?php echo plugin_dir_url( __FILE__ );?>assets/img/home.png" width="100%" />
+					<br/>
+					<div id="form_alert" class="d-none" role='alert'>
+						<strong>Hold on!</strong> Please note that you only specify a minimum of 1000 calories.
+					</div>
 				</div>
 				
 				<div class="" style="width: 30%; float: left;" >
@@ -83,19 +85,19 @@ function caca_front_form()
 						
 						
 						<div style="padding: 10px;">
-							<p> 
-								I want to eat <input type="number" id="calories" name="calories" style="width: 200px; padding: 5px; border: 1px solid grey;" placeholder="#####" min="400" /> Calories  
+							<p></p>
+							<input type="number" id="calories" name="calories" style="width: 100%;  display: block; padding: 10px; border: 1px solid grey;" placeholder="I want to eat ### calories" min="1000" />   
 <!--
 								| <a href="#"  data-toggle="modal" data-target="#exampleModal" >not sure, use <img src="<?php echo plugin_dir_url( __FILE__ );?>assets/img/calculator.png" width="30px" /></a>
 -->
-							</p>
-							<p> in  <select id="meal" name="meal" style="width: 200px; padding: 5px; border: 1px solid grey;" >
-										<option value="1">1 meal</option>
-										<option value="2">2 meals</option>
-										<option value="3" selected >3 meals</option>
-									</select>
-							</p>
-							<button style="padding: 10px; background-color: #1E90FF; border: 1px solid grey;"  onclick="processFORM()">Generate</button>
+							<select id="meal" name="meal" style="width: 100%; display: block; padding: 5px; margin-top: 2px; border: 1px solid grey;" >
+								<option value="">in # meals</option>
+								<option value="1">in 1 meal</option>
+								<option value="2">in 2 meals</option>
+								<option value="3" selected >in 3 meals</option>
+							</select>
+					
+							<button style="padding: 10px;  margin-top: 2px; background-color: #1E90FF; border: 1px solid grey;"  onclick="processFORM()">Generate</button>
 							
 							<!-- Modal -->
 							<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -123,6 +125,8 @@ function caca_front_form()
 				</div>
 			
 			</div>
+			
+			
 			
 			<div style=" width: 100%; float: left; background-color: #ffffff;">
 				<div style="width: 90%; margin: 2px auto;">
@@ -195,10 +199,10 @@ function caca_front_form()
 						
 						.food-tip {}
 						
-						.food-tip .float { background-color: #1E1717;} 
+						.food-tip { position: absolute; width: 210px; margin-left: 14%; margin-top: -1%; letter-spacing: 0.3px; font-size: 1.8rem; background-color: #1E1717; z-index: 1;} 
 						
-						.food-tip .float h5 { margin: 0px; color: #FFA500;} 
-						.food-tip .float p { margin: 0px; color: #FFA500;} 
+						.food-tip h5 { margin: 0px; color: #FFA500;} 
+						.food-tip p { margin: 0px; color: #FFA500;} 
 						
 						.food-plate {width: 100%; float: left; margin: 12px 0px; }
 						
@@ -230,7 +234,7 @@ function caca_front_form()
 						{
 							var calories = document.getElementById("calories").value;
 							
-							if (calories >= 400 )
+							if (calories >= 1000 )
 							{
 								var meal = document.getElementById("meal").value;
 								var xhttp = new XMLHttpRequest();
@@ -275,12 +279,12 @@ function caca_front_form()
 								if (this.readyState == 4 && this.status == 200) 
 								{
 
-									document.getElementById("id").innerHTML = JSON.parse(this.responseText);
+									document.getElementById(id).innerHTML = JSON.parse(this.responseText);
 									
 								}
 							};
 							
-							xhttp.open("GET", "<?php echo site_url("wp-json/food_spec/check/".date("dmYydmd"));?>/n/" + n + "/s/" + s, true);
+							xhttp.open("GET", "<?php echo site_url("wp-json/foodspec/check/".date("dmYydmd"));?>/n/" + n + "/s/" + s, true);
 							xhttp.send();
 							
 							
@@ -298,9 +302,15 @@ function caca_front_form()
 							document.getElementById("form_alert").setAttribute("class", "d-none")
 						}
 						
-						$('#modal".$bkfood->ID."btn').hover(function () {
-										$('#modal-".$bkfood->ID."').modal('show')
-									});
+						function show_tooltips(id)
+						{
+							document.getElementById(id).style.display='block';
+							
+							document.getElementById(id+"btn").onmouseout = function(){
+								document.getElementById(id).style.display='none';
+							}
+							
+						}
 						
 					</script>
 				</div>
