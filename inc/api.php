@@ -41,7 +41,7 @@ function cc_food_modx($bkfood, $x)
 					<i class='float-right fa fa-info-circle'></i>
 				</a>
 				
-				<br/><small>".get_post_meta($bkfood->ID,'serving', true )*$x ." Serving (".get_post_meta($bkfood->ID,'calories', true )*$x ." Calories ) </small>
+				<br/><small>".get_post_meta($bkfood->ID,'slot', true ).get_post_meta($bkfood->ID,'serving', true )*$x ." Serving (".get_post_meta($bkfood->ID,'calories', true )*$x ." Calories ) </small>
 			</h5>
 		
 			<div class='collapse food-tip' id='modal".$bkfood->ID."'>
@@ -65,8 +65,8 @@ function cc_get_meals($target_calories)
 	$meals = array();
 	$foods = array(
 				array("name"=>"Breakfast", "code" => array('BK1', 'BK2')),
-				array("name"=>"Lunch", "code" => "LU1"),
-				array("name"=>"Dinner", "code" => "DN"),
+				array("name"=>"Lunch", "code" => array('LU1', 'LU2')),
+				array("name"=>"Dinner", "code" => array("DN")),
 				//~ array("name"=>"Snack", "code" => "SN"),
 			);
 	
@@ -84,8 +84,7 @@ function cc_get_meals($target_calories)
 								array('key' => 'slot','value' => $food['code'])
 							),
 					);
-					
-				
+		
 		}
 		else
 		{
@@ -93,20 +92,20 @@ function cc_get_meals($target_calories)
 						'post_type' => 'fd_food', 
 						'orderby' => 'rand',
 						'order'   => 'DESC',
-						'meta_query' => array(
-											array('key' => 'slot','value' => $food['code'])
-										),
+						'meta_query' => array('key' => 'slot','value' => $food['code'])
+										
 					);
 					
-				
+			
+			//~ $mlfoods = array_slice($mlfoods,1,3);	
 		}
-		
 		
 		$mlfoods = get_posts( $fd_args );
 		
+		
 		foreach($mlfoods as $mlfood)
 		{
-			$meals[] = array("section" => (is_array($food['code']) ? "BK" : $food['code'] ), "food" => $mlfood, "calories" =>  get_post_meta($mlfood->ID,'calories', true ), "serve" => get_post_meta($mlfood->ID,'serving', true ) );
+			$meals[] = array("section" => $food['code'], "food" => $mlfood, "calories" =>  get_post_meta($mlfood->ID,'calories', true ), "serve" => get_post_meta($mlfood->ID,'serving', true ) );
 		}
 	}
 	
@@ -172,19 +171,22 @@ function cc_count_calories($meals)
 
 function cc_check_calories($meals, $target_calories)
 {
-	for ($i = 0; $i < count($meals); $i++)
+	$multiply = 0;
+	
+	for ($i = 0; $i < 9; $i++)
 	{
+		
 		if (cc_count_calories($meals) < $target_calories)
 		{
-			$meals[$i]['serve'] = $meals[$i]['serve'] + 1;
-		}
-		else
-		{
-			return $meals;
+			$meals[$i]['serve'] = $meals[$i]['serve'] + $multiply;
+			$multiply++;
 		}
 		
 		
 	}
+	
+	return $meals;
+	
 	
 }
 
@@ -195,7 +197,7 @@ function qb_api_get_foods( $data )
 		$target_calories = $data['calories'];
 		
 		$categories = array(
-						array("name"=>"Breakfast", "code" => "BK"),
+						array("name"=>"Breakfast", "code" => "BK1"),
 						array("name"=>"Lunch", "code" => "LU1"),
 						array("name"=>"Dinner", "code" => "DN"),
 						array("name"=>"Snack", "code" => "SN"),
@@ -207,7 +209,7 @@ function qb_api_get_foods( $data )
 		
 		for ($i = 0; $i < $data['meal']; $i++)
 		{
-			$bkfood_mod .="<div class='meal-card'> <h5 class='title'>".$categories[$i]['name']." <a onclick=".sprintf("individual_refresh('%s','%u','%s')", $categories[$i]['name']."-food", $slot, $i )." ><small><i class='float-right fas fa-sync'></i></small> </a> </h5>";
+			$bkfood_mod .="<div class='meal-card'> <h5 class='title'>".$categories[$i]['name']."  </h5>";
 			$bkfood_mod .="<div id='".$categories[$i]['name']."-food' >";
 			
 			foreach($checked_foods as $food)

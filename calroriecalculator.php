@@ -66,7 +66,7 @@ function caca_front_form()
 				</div>
 				
 				<div class="" style="width: 30%; float: left;" >
-					<img src="<?php echo plugin_dir_url( __FILE__ );?>assets/img/disk.png" width="100%" />
+					<img src="<?php echo plugin_dir_url( __FILE__ );?>assets/img/disk.png" width="90%" />
 				</div>
 				
 				<div class="" style="width: 70%; float: left;" >
@@ -90,14 +90,9 @@ function caca_front_form()
 <!--
 								| <a href="#"  data-toggle="modal" data-target="#exampleModal" >not sure, use <img src="<?php echo plugin_dir_url( __FILE__ );?>assets/img/calculator.png" width="30px" /></a>
 -->
-							<select id="meal" name="meal" style="width: 100%; display: block; padding: 5px; margin-top: 2px; border: 1px solid grey;" >
-								<option value="">in # meals</option>
-								<option value="1">in 1 meal</option>
-								<option value="2">in 2 meals</option>
-								<option value="3" selected >in 3 meals</option>
-							</select>
+							<input type="hidden" id="meal" name="meal" style="width: 100%; display: block; padding: 5px; margin-top: 2px; border: 1px solid grey;" value="3" />
 					
-							<button style="padding: 10px;  margin-top: 2px; background-color: #1E90FF; border: 1px solid grey;"  onclick="processFORM()">Generate</button>
+							<button style="padding: 10px;  margin-top: 2px; background-color: #50A6FA; border: 1px solid grey; border-radius: 10px;"  onclick="processFORM()">Generate</button>
 							
 							
 						</div>
