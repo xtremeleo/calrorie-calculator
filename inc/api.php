@@ -67,7 +67,6 @@ function cc_get_meals($target_calories)
 				array("name"=>"Breakfast", "code" => array('BK1', 'BK2')),
 				array("name"=>"Lunch", "code" => array('LU1', 'LU2')),
 				array("name"=>"Dinner", "code" => array("DN")),
-				//~ array("name"=>"Snack", "code" => "SN"),
 			);
 	
 	foreach($foods as $food)
@@ -96,8 +95,6 @@ function cc_get_meals($target_calories)
 										
 					);
 					
-			
-			//~ $mlfoods = array_slice($mlfoods,1,3);	
 		}
 		
 		$mlfoods = get_posts( $fd_args );
@@ -127,7 +124,7 @@ function cc_count_calories($meals)
 
 function cc_check_calories($meals, $target_calories)
 {
-	$multiply = 0;
+	$multiply = 2;
 	
 	for ($i = 0; $i < 9; $i++)
 	{
@@ -135,7 +132,7 @@ function cc_check_calories($meals, $target_calories)
 		if (cc_count_calories($meals) < $target_calories)
 		{
 			$meals[$i]['serve'] = $meals[$i]['serve'] + $multiply;
-			$multiply++;
+			
 		}
 		
 		
@@ -156,7 +153,6 @@ function qb_api_get_foods( $data )
 						array("name"=>"Breakfast", "code" => "BK1"),
 						array("name"=>"Lunch", "code" => "LU1"),
 						array("name"=>"Dinner", "code" => "DN"),
-						//~ array("name"=>"Snack", "code" => "SN"),
 				);
 		
 		$foods = cc_get_meals($target_calories);
@@ -193,44 +189,6 @@ function qb_api_get_foods( $data )
   
 }
 
-function qb_api_get_food_spec( $data ) 
-{
-	if ($data['check'] === date("dmYydmd") )
-	{
-		$slot = $data['n'];
-		
-		$foods = array(
-						array("name"=>"Breakfast", "code" => array('BK1', 'BK2')),
-						array("name"=>"Lunch", "code" => "LU1"),
-						array("name"=>"Dinner", "code" => "DN"),
-						array("name"=>"Snack", "code" => "SN"),
-				);
-		
-		$checked_foods = cc_get_meals_spec($slot, $foods[$data['s']]['code']);
-		
-		foreach($checked_foods as $food)
-		{
-			if ($food['section'] == $categories[$i]['code'] )
-			{
-				$bkfood_mod .= cc_food_modx($food['food'], $food['serve']);
-				$foods_calories[] = $food['calories'] * $food['serve'];
-			}
-			
-		}
-	
-		$bkfood_mod .="</div>";
-		
-		return $bkfood_mod;
-	}
-	else
-	{
-		return "wrong code";
-	}
-	
-	
-  
-}
-
 add_action( 'rest_api_init', function () {
   
   register_rest_route( 'food', 'check/(?P<check>\d+)/calories/(?P<calories>\d+)/meal/(?P<meal>\d+)/', array(
@@ -238,13 +196,8 @@ add_action( 'rest_api_init', function () {
     'callback' => 'qb_api_get_foods',
   ) );
   
-  register_rest_route( 'foodspec', 'check/(?P<check>\d+)/n/(?P<n>\d+)/s/(?P<s>\d+)/', array(
-    'methods' => 'GET',
-    'callback' => 'qb_api_get_food_spec',
-  ) );
   
   
 } );
 
-#http://talkerscode.com/webtricks/upload-image-from-url-using-php.php
 ?>
