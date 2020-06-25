@@ -46,15 +46,15 @@ function cc_food_modx($bkfood, $x)
 		
 			<div class='collapse food-tip' id='modal".$bkfood->ID."'>
 				<div class='col-12'>
-					<p style='color: #90EE90;' >Calories: ".get_post_meta($bkfood->ID,'calories', true )."</p>
-					<p >CARBS: ".get_post_meta($bkfood->ID,'carbs', true )."</p>
+					<p style='color: #90EE90;' >Calories: ".get_post_meta($bkfood->ID,'calories', true )*$x."</p>
+					<p >CARBS: ".get_post_meta($bkfood->ID,'carbs', true )." (x ".$x.")</p>
 					
-					<p >Fats: ".get_post_meta($bkfood->ID,'fats', true )."</p>
-					<p >Protein: ".get_post_meta($bkfood->ID,'protein', true )."</p>
+					<p >Fats: ".get_post_meta($bkfood->ID,'fats', true )." (x ".$x.")</p>
+					<p >Protein: ".get_post_meta($bkfood->ID,'protein', true )." (x ".$x.")</p>
 					
-					<p >Glycemic Score: ".get_post_meta($bkfood->ID,'glycemic', true )."</p>
-					<p style='color: #ADD8E6;' >Ingredients: ".get_post_meta($bkfood->ID,'ingredients', true )."</p>
-					<p style='color: #52E552;' >Prep Time: ".get_post_meta($bkfood->ID,'prep', true )."</p>
+					<p >Glycemic Score: ".get_post_meta($bkfood->ID,'glycemic', true )." (x ".$x.")</p>
+					<p style='color: #ADD8E6;' >Ingredients: ".get_post_meta($bkfood->ID,'ingredients', true )." (x ".$x.")</p>
+					<p style='color: #52E552;' >Prep Time: ".get_post_meta($bkfood->ID,'prep', true )." (x ".$x.")</p>
 				</div>
 			</div>
 	</div>";
@@ -64,9 +64,9 @@ function cc_get_meals($target_calories)
 {
 	$meals = array();
 	$foods = array(
-				array("name"=>"Breakfast", "code" => array('BK1', 'BK2')),
-				array("name"=>"Lunch", "code" => array('LU1', 'LU2')),
-				array("name"=>"Dinner", "code" => array("DN")),
+				array("name"=>"Dinner", "plate" => 4, "code" => array("DN")),
+				array("name"=>"Lunch", "plate" => 3, "code" => array('LU1', 'LU2')),
+				array("name"=>"Breakfast", "plate" => 3, "code" => array('BK1', 'BK2')),
 			);
 	
 	foreach($foods as $food)
@@ -87,7 +87,7 @@ function cc_get_meals($target_calories)
 		}
 		else
 		{
-			$fd_args = array('numberposts' => 3, 
+			$fd_args = array('numberposts' => $food['plate'], 
 						'post_type' => 'fd_food', 
 						'orderby' => 'rand',
 						'order'   => 'DESC',
@@ -124,18 +124,21 @@ function cc_count_calories($meals)
 
 function cc_check_calories($meals, $target_calories)
 {
-	$multiply = 2;
+	$multiply = 1;
 	
-	for ($i = 0; $i < 9; $i++)
+	for ($a = 0; $a < 3; $a++)
 	{
-		
-		if (cc_count_calories($meals) < $target_calories)
+		for ($i = 0; $i < 7; $i++)
 		{
-			$meals[$i]['serve'] = $meals[$i]['serve'] + $multiply;
+			
+			if (cc_count_calories($meals) < $target_calories)
+			{
+				$meals[$i]['serve'] = $meals[$i]['serve'] + $multiply;
+				
+			}
+			
 			
 		}
-		
-		
 	}
 	
 	return $meals;
