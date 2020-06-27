@@ -46,15 +46,16 @@ function cc_food_modx($bkfood, $x)
 		
 			<div class='collapse food-tip' id='modal".$bkfood->ID."'>
 				<div class='col-12'>
-					<p style='color: #90EE90;' >Calories: ".get_post_meta($bkfood->ID,'calories', true )*$x."</p>
-					<p >CARBS: ".get_post_meta($bkfood->ID,'carbs', true )." (x ".$x.")</p>
+					".($x > 1 ? "<p><strong>Each Serve Consist of:</strong></p>":"" )."
+					<p style='color: #90EE90;' >Calories: ".get_post_meta($bkfood->ID,'calories', true )."</p>
+					<p >CARBS: ".get_post_meta($bkfood->ID,'carbs', true )."</p>
 					
-					<p >Fats: ".get_post_meta($bkfood->ID,'fats', true )." (x ".$x.")</p>
-					<p >Protein: ".get_post_meta($bkfood->ID,'protein', true )." (x ".$x.")</p>
+					<p >Fats: ".get_post_meta($bkfood->ID,'fats', true )."</p>
+					<p >Protein: ".get_post_meta($bkfood->ID,'protein', true )."</p>
 					
-					<p >Glycemic Score: ".get_post_meta($bkfood->ID,'glycemic', true )." (x ".$x.")</p>
-					<p style='color: #ADD8E6;' >Ingredients: ".get_post_meta($bkfood->ID,'ingredients', true )." (x ".$x.")</p>
-					<p style='color: #52E552;' >Prep Time: ".get_post_meta($bkfood->ID,'prep', true )." (x ".$x.")</p>
+					<p >Glycemic Score: ".get_post_meta($bkfood->ID,'glycemic', true )."</p>
+					<p style='color: #ADD8E6;' >Ingredients: ".get_post_meta($bkfood->ID,'ingredients', true )."</p>
+					<p style='color: #52E552;' >Prep Time: ".get_post_meta($bkfood->ID,'prep', true )."</p>
 				</div>
 			</div>
 	</div>";
