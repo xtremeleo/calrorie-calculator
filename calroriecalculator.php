@@ -181,6 +181,66 @@ function caca_front_form()
 						
 						.food-plate {width: 100%; float: left; margin: 12px 0px; }
 						
+						div.food-plate {
+	cursor: pointer;
+	padding: 3px;
+	border: 1px solid white;
+}
+div.food-plate:hover {
+	border: 1px solid #bf868d;
+	border-radius: 5px;
+	box-shadow: 0 6px 14px 0 rgba(0, 0, 0, 0.22);
+}
+div.food-plate > div:first-child {
+	border: 3px solid white;
+	padding: 10px;
+}
+div.food-plate > div:first-child:hover {
+	border: 3px solid #bf868d;
+}
+div.food-plate > div:first-child {
+	background-size:auto 60px !important;
+	height: 60px  !important;
+	width: 60px  !important;
+}
+.meal-card .title {
+	font-weight: bold;
+}
+#calories {
+	float: left;
+	width: 50% !important;
+	margin-top: 3px;
+}
+.entry-content > div:nth-child(1) > div:nth-child(1) > div:nth-child(2) > img:nth-child(1) {
+	width: 100px;
+	margin-left: 40px;
+}
+.form > div:nth-child(1) > button:nth-child(4) {
+	width: 35%;
+	float: left;
+	border-radius: 0 10px 10px 0px !important;
+
+}
+.form > div:nth-child(1) > button:nth-child(4) {
+	background-color: #1b2022 !important;
+	border: 2px solid #1b2022 !important;
+	font-size: 0.89pc !important;
+}
+.form > div:nth-child(1) > button:nth-child(4):hover {
+	background-color: #d34d5e !important;
+	border-color: #d34d5e !important;
+	text-decoration: none;
+}
+.title-bar > h5:nth-child(2) > a:nth-child(1) {
+	float: right;
+}
+.title-bar > h5:nth-child(2) {
+	padding: 10px;
+	border: 1px solid rgba(0, 0, 0, 0.13);
+	width: 100%;
+	border-radius: 5px;
+}
+						
 					</style>
 					
 					<div id="showLoader" style="margin-top: 138px; display: none; padding: 32px;">
