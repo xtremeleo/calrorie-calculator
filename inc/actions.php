@@ -1,12 +1,14 @@
 <?php
 function fd_actions()
 {	
-	global $errors;
-	$errors = new WP_Error();
-	$success = null;
+	
 	
 	if (!empty($_POST['action']))
 	{
+		global $errors;
+		$errors = new WP_Error();
+		$success = null;
+		
 		$action = $_POST['action'];
 		
 		if ($action == "fd_import")
