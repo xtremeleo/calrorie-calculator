@@ -1,48 +1,18 @@
 <?php 
 
-function cc_food_mod($bkfood)
-{
-	return "<div class='food-plate'>
-	
-			<div style='position: relative; width: 100px; height: 100px; float: left; border-radius: 20%; margin-right: 10px; background-color: #BFBFBF; background-repeat: no-repeat; background-size: 180%; background-image: url(".get_the_post_thumbnail_url($bkfood->ID, '200' ).");'></div>
-		
-			<h5 class='sub-title'> ".$bkfood->post_title." 
-				<a id='modal".$bkfood->ID."btn' onmouseover=show_tooltips('modal".$bkfood->ID."') data-toggle='collapse' href='#modal-".$bkfood->ID."' role='button' aria-expanded='false' aria-controls='#modal-".$bkfood->ID."' >
-					<i class='float-right fa fa-info-circle'></i>
-				</a>
-				
-				<br/><small>".get_post_meta($bkfood->ID,'serving', true ) ." Serving (".get_post_meta($bkfood->ID,'calories', true ) ." Calories ) </small>
-			</h5>
-		
-			<div class='collapse food-tip' id='modal".$bkfood->ID."'>
-				<div class='col-12'>
-					<p style='color: #90EE90;' >Calories: ".get_post_meta($bkfood->ID,'calories', true )."</p>
-					<p >CARBS: ".get_post_meta($bkfood->ID,'carbs', true )."</p>
-					
-					<p >Fats: ".get_post_meta($bkfood->ID,'fats', true )."</p>
-					<p >Protein: ".get_post_meta($bkfood->ID,'protein', true )."</p>
-					
-					<p >Glycemic Score: ".get_post_meta($bkfood->ID,'glycemic', true )."</p>
-					<p style='color: #ADD8E6;' >Ingredients: ".get_post_meta($bkfood->ID,'ingredients', true )."</p>
-					<p style='color: #52E552;' >Prep Time: ".get_post_meta($bkfood->ID,'prep', true )."</p>
-				</div>
-			</div>
-	</div>";
-}
-
 function cc_food_modx($bkfood, $x)
 {
 	return "<div class='food-plate'>
 	
 			<div style='position: relative; width: 100px; height: 100px; float: left; border-radius: 20%; margin-right: 10px; background-color: #BFBFBF; background-repeat: no-repeat; background-size: 180%; background-image: url(".get_the_post_thumbnail_url($bkfood->ID, '200' ).");'></div>
 		
-			<h5 class='sub-title'> ".$bkfood->post_title." 
-				<a id='modal".$bkfood->ID."btn' onmouseover=show_tooltips('modal".$bkfood->ID."') data-toggle='collapse' href='#modal-".$bkfood->ID."' role='button' aria-expanded='false' aria-controls='#modal-".$bkfood->ID."' >
+			<a id='modal".$bkfood->ID."btn' onmouseover=show_tooltips('modal".$bkfood->ID."') data-toggle='collapse' href='#modal-".$bkfood->ID."' role='button' aria-expanded='false' aria-controls='#modal-".$bkfood->ID."' style='text-decoration: none;' >
+				<h5 class='sub-title' > 
+					".$bkfood->post_title." 
 					<i class='float-right fa fa-info-circle'></i>
-				</a>
-				
-				<br/><small>".get_post_meta($bkfood->ID,'serving', true )*$x ." Serving (".get_post_meta($bkfood->ID,'calories', true )*$x ." Calories ) </small>
-			</h5>
+					<br/><small>".get_post_meta($bkfood->ID,'serving', true )*$x ." Serving (".get_post_meta($bkfood->ID,'calories', true )*$x ." Calories ) </small>
+				</h5>
+			</a>
 		
 			<div class='collapse food-tip' id='modal".$bkfood->ID."'>
 				<div class='col-12'>
@@ -52,8 +22,8 @@ function cc_food_modx($bkfood, $x)
 					<p >Fats: ".get_post_meta($bkfood->ID,'fats', true )*$x."g</p>
 					<p >Protein: ".get_post_meta($bkfood->ID,'protein', true )*$x."g</p>
 					
-					<p >Glycemic Score: ".get_post_meta($bkfood->ID,'glycemic', true )*$x."</p>
-					<p style='color: #ADD8E6;' >Ingredients: ".get_post_meta($bkfood->ID,'ingredients', true )."</p>
+					<p >Glycemic Score: ".get_post_meta($bkfood->ID,'glycemic', true )."</p>
+					<p style='color: #ADD8E6;' >Ingredients for one serve: ".get_post_meta($bkfood->ID,'ingredients', true )."</p>
 					<p style='color: #52E552;' >Prep Time: ".get_post_meta($bkfood->ID,'prep', true )."</p>
 				</div>
 			</div>
@@ -71,9 +41,9 @@ function cc_get_meals($target_calories)
 	
 	foreach($foods as $food)
 	{
-		if($target_calories < 2000 )
+		if($target_calories < 1900 )
 		{
-			$fd_args = array('numberposts' => 3, 
+			$fd_args = array('numberposts' => $food['plate'], 
 						'post_type' => 'fd_food', 
 						'orderby' => 'rand',
 						'order'   => 'DESC',
@@ -128,7 +98,7 @@ function cc_check_calories($meals, $target_calories)
 	
 	for ($a = 0; $a < 3; $a++)
 	{
-		for ($i = 0; $i < 7; $i++)
+		for ($i = 0; $i < 6; $i++)
 		{
 			
 			if (cc_count_calories($meals) < $target_calories)
@@ -171,8 +141,17 @@ function qb_api_get_foods( $data )
 			{
 				if (in_array( $categories[$i]['code'], $food['section']) )
 				{
-					$bkfood_mod .= cc_food_modx($food['food'], $food['serve']);
-					$foods_calories[] = $food['calories'] * $food['serve'];
+					if ($categories[$i]['code'] == "BK1")
+					{
+						$bkfood_mod .= cc_food_modx($food['food'], 1);
+						$foods_calories[] = $food['calories'] ;
+					}
+					else
+					{
+						$bkfood_mod .= cc_food_modx($food['food'], $food['serve']);
+						$foods_calories[] = $food['calories'] * $food['serve'];
+					}
+					
 				}
 				
 			}
